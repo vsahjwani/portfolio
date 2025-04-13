@@ -1,4 +1,7 @@
-
+html {
+  --color-accent: oklch(65% 50% 0);
+  accent-color: var(--color-accent);
+}
 
 body {
   font-family: system-ui, sans-serif;
@@ -17,6 +20,14 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.1;
   text-wrap: balance;
   margin-block: 0.5em;
+}
+
+img{
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-top: 0.5em;
+  border-radius: 0.5em;
 }
 
 /* Navigation Bar */
@@ -84,4 +95,31 @@ form button {
 
 .projects article h2 {
   margin: 0;
+}
+
+.resume {
+  display: grid;
+  gap: 1em;
+  padding: 1em;
+  background-color: oklch(98% 0.01 260);
+  border-radius: 1em;
+  box-shadow: 0 0 0.5em oklch(0% 0 0 / 0.1);
+}
+
+.resume section {
+  background: white;
+  padding: 1em;
+  border-radius: 0.5em;
+  border: 1px solid oklch(90% 0 0);
+}
+
+.resume h2 {
+  color: var(--color-accent);
+  border-bottom: 2px solid var(--color-accent);
+  padding-bottom: 0.25em;
+  margin-bottom: 0.5em;
+}
+
+.resume p {
+  margin: 0.25em 0;
 }
