@@ -23,12 +23,7 @@ h1, h2, h3, h4, h5, h6 {
 nav {
   display: flex;
   border-bottom: 1px solid oklch(80% 3% 200);
-  margin-bottom: 1em;
-}
-
-nav ul,
-nav li {
-  display: contents;
+  margin-bottom: 1.5em;
 }
 
 nav a {
