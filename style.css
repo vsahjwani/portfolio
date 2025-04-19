@@ -141,3 +141,41 @@ form button {
 .resume p {
   margin: 0.25em 0;
 }
+
+/* Add this to your existing CSS file */
+
+/* Step 4.1: Automatic dark mode */
+html {
+  color-scheme: light dark;
+}
+
+nav {
+  --border-color: oklch(50% 10% 200 / 40%);
+  display: flex;
+  border-bottom: 1px solid oklch(80% 3% 200);
+  margin-bottom: 1.5em;
+}
+
+nav a {
+  border-bottom-color: var(--border-color);
+  flex: 1;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  padding: 0.5em;
+}
+
+nav a:hover, nav a:focus {
+  background-color: color-mix(in oklch, var(--color-accent), canvas 85%);
+}
+
+.color-scheme {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 80%;
+}
+
+input, textarea, button, select {
+  font-family: inherit;
+}
