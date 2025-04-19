@@ -119,13 +119,13 @@ form button {
   display: grid;
   gap: 1em;
   padding: 1em;
-  background-color: oklch(98% 0.01 260);
+  background-color: orange;
   border-radius: 1em;
   box-shadow: 0 0 0.5em oklch(0% 0 0 / 0.1);
 }
 
 .resume section {
-  background: white;
+  background: black;
   padding: 1em;
   border-radius: 0.5em;
   border: 1px solid oklch(90% 0 0);
