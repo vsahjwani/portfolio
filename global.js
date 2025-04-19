@@ -4,19 +4,40 @@ function $$(selector, context = document) {
   return Array.from(context.querySelectorAll(selector));
 }
 
-let pages = [
-    { url: 'https://vsahjwani.github.io/portfolio/', title: 'Home' },
-    { url: 'https://vsahjwani.github.io/portfolio/projects/', title: 'Projects' },
-    { url: 'https://vsahjwani.github.io/portfolio/resume/', title: 'Resume' },
-    { url: 'https://vsahjwani.github.io/portfolio/contact/', title: 'Contact' },
-    { url: "https://github.com/vsahjwani", title: 'Profile' },
-  ];
+// Define base URLs for local vs. production
+const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+const BASE_URL = isLocal ? "/" : "/portfolio/";
 
+// Define page paths (relative to the base URL)
+let pages = [
+    { url: '', title: 'Home' },
+    { url: 'projects/', title: 'Projects' },
+    { url: 'resume/', title: 'Resume' },
+    { url: 'contact/', title: 'Contact' },
+    { url: "https://github.com/vsahjwani", title: 'Profile' },
+];
+
+// Create navigation
 let nav = document.createElement('nav');
 document.body.prepend(nav);
 
 for (let p of pages) {
     let url = p.url;
+    // Generate the full URL based on environment
+    if (!url.startsWith('http')) {
+        // For relative URLs, adjust based on current path depth if local
+        if (isLocal) {
+            // Get current directory depth
+            const pathParts = location.pathname.split('/').filter(Boolean);
+            url = pathParts.length > 0 ? '../'.repeat(pathParts.length) + url : url;
+        } else {
+            // For GitHub Pages
+            url = BASE_URL + url;
+        }
+    }
+    
+    console.log(`Generated URL for ${p.title}: ${url}`); // Debugging
+    
     let title = p.title;
     
     let a = document.createElement('a');
@@ -24,8 +45,15 @@ for (let p of pages) {
     a.textContent = title;
     nav.append(a);
 
-    if (a.host === location.host && a.pathname === location.pathname) {
+    // Check if this is the current page (local vs production)
+    const currentPath = location.pathname.replace(/index\.html$/, '');
+    const linkPath = a.pathname.replace(/index\.html$/, '');
+    
+    if (a.host === location.host && 
+        ((isLocal && linkPath === currentPath) || 
+         (!isLocal && linkPath === currentPath))) {
         a.classList.add('current');
+        console.log(`Current page: ${title}`); // Debugging
     }
     
     if (a.host !== location.host) {
