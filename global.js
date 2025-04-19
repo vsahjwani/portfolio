@@ -4,14 +4,13 @@ function $$(selector, context = document) {
   return Array.from(context.querySelectorAll(selector));
 }
 
-// Step 3: Automatic navigation menu
 let pages = [
-  { url: '', title: 'Home' },
-  { url: 'projects/', title: 'Projects' },
-  { url: 'resume/', title: 'Resume' },
-  { url: 'contact/', title: 'Contact' },
-  { url: "https://github.com/vsahjwani", title: 'Profile' },
-];
+    { url: 'https://vsahjwani.github.io/portfolio/', title: 'Home' },
+    { url: 'https://vsahjwani.github.io/portfolio/projects/', title: 'Projects' },
+    { url: 'https://vsahjwani.github.io/portfolio/resume/', title: 'Resume' },
+    { url: 'https://vsahjwani.github.io/portfolio/contact/', title: 'Contact' },
+    { url: "https://github.com/vsahjwani", title: 'Profile' },
+  ];
 
 let nav = document.createElement('nav');
 document.body.prepend(nav);
