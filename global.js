@@ -17,26 +17,13 @@ document.body.prepend(nav);
 
 for (let p of pages) {
     let url = p.url;
-    
-    // Get current directory depth
-    const pathParts = location.pathname.split('/').filter(Boolean);
-    const currentDepth = pathParts.length;
-    
-    // For pages in subdirectories, adjust the path accordingly
-    if (currentDepth > 0 && !url.startsWith('http')) {
-      url = '../'.repeat(currentDepth) + url;
-    } else if (!url.startsWith('http')) {
-      url = url;
-    }
-    
-    // The rest of your code...
     let title = p.title;
     
     let a = document.createElement('a');
     a.href = url;
     a.textContent = title;
     nav.append(a);
-    // Add "current" class to current page link
+
     if (a.host === location.host && a.pathname === location.pathname) {
         a.classList.add('current');
     }
