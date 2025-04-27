@@ -99,3 +99,40 @@ contactForm?.addEventListener('submit', function(event) {
   url += params.join("&");
   location.href = url;
 });
+
+export async function fetchJSON(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Failed to fetch: ${response.statusText}`);
+    return await response.json();
+  } catch (error) {
+    console.error('Error:', error);
+    return [];
+  }
+}
+
+export function renderProjects(projects, container, headingLevel = 'h2') {
+  if (!container) return;
+  container.innerHTML = '';
+  
+  projects.forEach(project => {
+    const article = document.createElement('article');
+    article.innerHTML = `
+      <${headingLevel}>${project.title}</${headingLevel}>
+      <img src="${project.image}" alt="${project.title}">
+      <p>${project.description}</p>
+    `;
+    container.appendChild(article);
+  });
+}
+
+export async function fetchGitHubData(username) {
+  try {
+    const response = await fetch(`https://api.github.com/users/${username}`);
+    if (!response.ok) throw new Error(`GitHub error: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error('GitHub API Error:', error);
+    return null;
+  }
+}
