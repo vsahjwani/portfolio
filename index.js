@@ -10,7 +10,7 @@ import { fetchJSON, renderProjects, fetchGitHubData } from './global.js';
   } catch (error) {
     console.error('Error loading projects:', error);
   }
-  const githubData = await fetchGitHubData('YOUR_GITHUB_USERNAME');
+  const githubData = await fetchGitHubData('vsahjwani');
   const profileStats = document.querySelector('#profile-stats');
   
   if (githubData && profileStats) {
