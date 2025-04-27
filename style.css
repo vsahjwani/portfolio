@@ -142,9 +142,6 @@ form button {
   margin: 0.25em 0;
 }
 
-/* Add this to your existing CSS file */
-
-/* Step 4.1: Automatic dark mode */
 html {
   color-scheme: light dark;
 }
@@ -214,4 +211,19 @@ input, textarea, button, select {
   grid-row: 2;
   margin: 0;
   font-size: 1.5em;
+}
+
+@media (prefers-color-scheme: dark) {
+  .resume {
+    color: white !important; /* Forces white text in dark mode */
+  }
+  
+  .resume a {
+    color: oklch(80% 0.5 200) !important; /* Light blue for links */
+  }
+  
+  .resume section {
+    background-color: oklch(20% 0.1 200) !important; /* Darker background */
+    border-color: oklch(40% 0.1 200) !important; /* Slightly lighter border */
+  }
 }
