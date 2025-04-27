@@ -179,3 +179,19 @@ nav a:hover, nav a:focus {
 input, textarea, button, select {
   font-family: inherit;
 }
+
+.resume {
+  display: grid;
+  gap: 1em;
+  padding: 1em;
+  background-color: orange;
+  border-radius: 1em;
+  box-shadow: 0 0 0.5em oklch(0% 0 0 / 0.1);
+}
+
+.resume section {
+  background: black;
+  padding: 1em;
+  border-radius: 0.5em;
+  border: 1px solid oklch(90% 0 0);
+}

@@ -22,43 +22,29 @@ let nav = document.createElement('nav');
 document.body.prepend(nav);
 
 for (let p of pages) {
-    let url = p.url;
-    // Generate the full URL based on environment
-    if (!url.startsWith('http')) {
-        // For relative URLs, adjust based on current path depth if local
-        if (isLocal) {
-            // Get current directory depth
-            const pathParts = location.pathname.split('/').filter(Boolean);
-            url = pathParts.length > 0 ? '../'.repeat(pathParts.length) + url : url;
-        } else {
-            // For GitHub Pages
-            url = BASE_URL + url;
-        }
-    }
-    
-    console.log(`Generated URL for ${p.title}: ${url}`); // Debugging
-    
-    let title = p.title;
-    
-    let a = document.createElement('a');
-    a.href = url;
-    a.textContent = title;
-    nav.append(a);
+  let url = p.url;
+  // Generate the full URL based on environment
+  if (!p.url.startsWith('http')) {
+      if (isLocal) {
+          url = p.url; // Use relative paths locally
+      } else {
+          url = '/portfolio/' + p.url; // Use root-relative paths in production
+      }
+  }
+  
+  let a = document.createElement('a');
+  a.href = url;
+  a.textContent = p.title;
+  nav.append(a);
 
-    // Check if this is the current page (local vs production)
-    const currentPath = location.pathname.replace(/index\.html$/, '');
-    const linkPath = a.pathname.replace(/index\.html$/, '');
-    
-    if (a.host === location.host && 
-        ((isLocal && linkPath === currentPath) || 
-         (!isLocal && linkPath === currentPath))) {
-        a.classList.add('current');
-        console.log(`Current page: ${title}`); // Debugging
-    }
-    
-    if (a.host !== location.host) {
-        a.target = "_blank";
-    }
+  // Current page check remains the same
+  if (a.host === location.host && a.pathname === location.pathname) {
+      a.classList.add('current');
+  }
+  
+  if (a.host !== location.host) {
+      a.target = "_blank";
+  }
 }
 
 document.body.insertAdjacentHTML(
