@@ -140,6 +140,7 @@ form button {
 
 .resume p {
   margin: 0.25em 0;
+  color: inherit;
 }
 
 html {
