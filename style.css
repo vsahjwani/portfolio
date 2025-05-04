@@ -241,27 +241,20 @@ input, textarea, button, select {
   }
 }
 
-&:has(path:hover) {
+svg:has(path:hover) {
   path:not(:hover) {
     opacity: 0.5;
   }
 }
 
-path {
+svg path {
   transition: 300ms;
-}
-
-path {
   cursor: pointer;
 }
 
-.selected {
-  --color: oklch(60% 45% 0) !important;
-
-  &:is(path) {
-    fill: var(--color);
+svg path.selected {
+  fill: oklch(60% 45% 0) !important;
   }
-}
 
 .legend {
   display: grid;
