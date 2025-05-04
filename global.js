@@ -121,7 +121,7 @@ export function renderProjects(projects, container, headingLevel = 'h2') {
       <${headingLevel}>${project.title}</${headingLevel}>
       <img src="${project.image}" alt="${project.title}">
       <div>
-      <p> ${project.description} <i${project.year}> </p>
+      <p> ${project.description} ${project.year} </p>
       <\div>
     `;
     container.appendChild(article);
@@ -138,3 +138,22 @@ export async function fetchGitHubData(username) {
     return null;
   }
 }
+
+export async function fetchRepos(username) {
+  const response = await fetch(`https://api.github.com/users/${username}/repos`);
+  const data = await response.json();
+  return data;
+}
+
+async function showRepos() {
+  const repos = await fetchRepos('vsahjwani');
+  const list = document.querySelector('#repo-list');
+
+  repos.forEach(repo => {
+    const item = document.createElement('li');
+    item.textContent = repo.name;
+    list.appendChild(item);
+  });
+}
+
+showRepos();

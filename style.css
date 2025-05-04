@@ -199,6 +199,13 @@ input, textarea, button, select {
   font-size: 1.5em;
 }
 
+#projects-pie-plot {
+  max-width: 20em;
+  margin-block: 2em;
+
+  overflow: visible;
+}
+
 @media (prefers-color-scheme: dark) {
   body {
     color: white; /* or a light gray like #eaeaea */
