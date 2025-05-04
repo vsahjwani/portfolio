@@ -107,8 +107,8 @@ form button {
 
 .projects-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
 }
 
 .projects article h2 {
@@ -215,10 +215,16 @@ input, textarea, button, select {
 }
 
 @media (prefers-color-scheme: dark) {
-  .resume {
-    color: white !important; /* Forces white text in dark mode */
+  body {
+    color: white; /* or a light gray like #eaeaea */
+    background-color: #111;
   }
-  
+
+  .container {
+    color: #111;
+    background-color: white;
+  }
+
   .resume a {
     color: oklch(80% 0.5 200) !important; /* Light blue for links */
   }
@@ -226,5 +232,17 @@ input, textarea, button, select {
   .resume section {
     background-color: oklch(20% 0.1 200) !important; /* Darker background */
     border-color: oklch(40% 0.1 200) !important; /* Slightly lighter border */
+  }
+}
+
+@media (max-width: 1024px) {
+  .projects-list {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
+  }
+}
+
+@media (max-width: 600px) {
+  .projects-list {
+    grid-template-columns: 1fr; /* 1 column on phones */
   }
 }
