@@ -251,10 +251,41 @@ path {
   transition: 300ms;
 }
 
+path {
+  cursor: pointer;
+}
+
 .selected {
   --color: oklch(60% 45% 0) !important;
 
   &:is(path) {
     fill: var(--color);
   }
+}
+
+.legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9em, 1fr));
+  gap: 1rem;
+  margin-block: 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em;
+}
+
+.legend li.selected {
+  background-color: oklch(60% 45% 0 / 0.1);
+}
+
+.legend .swatch {
+  width: 1em;
+  aspect-ratio: 1/1;
+  background-color: var(--color);
+  border-radius: 0.125em;
 }
