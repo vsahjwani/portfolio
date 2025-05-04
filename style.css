@@ -125,6 +125,8 @@ form button {
 }
 
 .resume section {
+  color: black;
+  background-color: white;
   padding: 1em;
   border-radius: 0.5em;
   border: 1px solid oklch(90% 0 0);
@@ -177,15 +179,6 @@ input, textarea, button, select {
   font-family: inherit;
 }
 
-.resume {
-  display: grid;
-  gap: 1em;
-  padding: 1em;
-  background-color: orange;
-  border-radius: 1em;
-  box-shadow: 0 0 0.5em oklch(0% 0 0 / 0.1);
-}
-
 #profile-stats dl {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -218,8 +211,8 @@ input, textarea, button, select {
   }
 
   .resume section {
-    color: #111;
-    background-color: white;
+    color: #111 !important;
+    background-color: white !important;
     border-color: oklch(40% 0.1 200) !important;
   }
 
