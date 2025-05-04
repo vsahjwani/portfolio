@@ -82,8 +82,8 @@ form button {
 
 /* Projects Page */
 .projects {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   margin: 2rem auto;
   padding: 1rem;
@@ -103,12 +103,6 @@ form button {
 .projects img {
   max-width: 100%;
   height: auto;
-}
-
-.projects-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
 }
 
 .projects article h2 {
