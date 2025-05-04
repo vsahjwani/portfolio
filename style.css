@@ -22,7 +22,7 @@ h1, h2, h3, h4, h5, h6 {
   margin-block: 0.5em;
 }
 
-article {
+section {
   color: white;
   background-color: black;
 }
@@ -96,6 +96,7 @@ form button {
 }
 
 .projects article {
+  color: black;
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 1rem;
@@ -124,7 +125,6 @@ form button {
 }
 
 .resume section {
-  background: black;
   padding: 1em;
   border-radius: 0.5em;
   border: 1px solid oklch(90% 0 0);
@@ -186,13 +186,6 @@ input, textarea, button, select {
   box-shadow: 0 0 0.5em oklch(0% 0 0 / 0.1);
 }
 
-.resume section {
-  background: black;
-  padding: 1em;
-  border-radius: 0.5em;
-  border: 1px solid oklch(90% 0 0);
-}
-
 #profile-stats dl {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -224,19 +217,16 @@ input, textarea, button, select {
     background-color: #111;
   }
 
-  .resume article {
+  .resume section {
     color: #111;
     background-color: white;
+    border-color: oklch(40% 0.1 200) !important;
   }
 
   .resume a {
     color: oklch(80% 0.5 200) !important; /* Light blue for links */
   }
   
-  .resume section {
-    background-color: oklch(20% 0.1 200) !important; /* Darker background */
-    border-color: oklch(40% 0.1 200) !important; /* Slightly lighter border */
-  }
 }
 
 @media (max-width: 1024px) {
