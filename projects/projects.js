@@ -86,8 +86,7 @@ function addPieInteractions(data, projects, container) {
     addPieInteractions(pieData, projects, container);
 
     // Search integration
-    let query = '';
-    const searchInput = document.querySelector('#search');
+    const searchInput = document.querySelector('.searchBar');
     searchInput.addEventListener('input', (event) => {
       const query = event.target.value.trim().toLowerCase();
       let filtered = projects.filter(p =>
