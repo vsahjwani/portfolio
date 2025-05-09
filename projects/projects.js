@@ -68,7 +68,6 @@ function addPieInteractions(data, projects, container) {
 
     renderProjects(filtered, container, 'h2');
     renderPieChart(rollupProjects(filtered));
-    addPieInteractions(rollupProjects(filtered), projects, container);
   });
 }
 
