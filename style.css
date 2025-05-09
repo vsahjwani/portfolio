@@ -265,13 +265,14 @@ svg path.selected {
   list-style: none;
 }
 
-.legend ul {
+.legend li {
+  display: flex;
   align-items: center;
   gap: 0.5em;
   padding: 0.5em;
 }
 
-.legend ul.selected {
+.legend li.selected {
   background-color: oklch(60% 45% 0 / 0.1);
 }
 
@@ -282,6 +283,6 @@ svg path.selected {
   border-radius: 0.125em;
 }
 
-.container div {
+.container {
   display: flex;
 }
