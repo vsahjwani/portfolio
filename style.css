@@ -286,5 +286,4 @@ svg path.selected {
 .container {
   display: flex;
   gap: 2rem;
-  background-color: lightgray;
 }
