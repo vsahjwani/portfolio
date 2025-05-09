@@ -266,7 +266,6 @@ svg path.selected {
 }
 
 .legend ul {
-  display: flex;
   align-items: center;
   gap: 0.5em;
   padding: 0.5em;
@@ -284,5 +283,5 @@ svg path.selected {
 }
 
 .container div {
-  display: flexbox;
+  display: flex;
 }
