@@ -1,21 +1,6 @@
 import { fetchJSON, renderProjects } from '../global.js';
 import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7.9.0/+esm';
 
-(async () => {
-  try {
-    const projects = await fetchJSON('../lib/projects.json');
-    const container = document.querySelector('.projects');
-    renderProjects(projects, container, 'h2');
-    
-    const titleElement = document.querySelector('.projects-title');
-    if (titleElement) {
-      titleElement.innerHTML += ` (${projects.length})`;
-    }
-  } catch (error) {
-    console.error('Error loading projects:', error);
-  }
-})();
-
 const colors = d3.scaleOrdinal(d3.schemeTableau10);
 const arcGenerator = d3.arc().innerRadius(0).outerRadius(50);
 const pieGenerator = d3.pie().value((d) => d.value);
@@ -90,7 +75,8 @@ function addPieInteractions(data, projects, container) {
     searchInput.addEventListener('input', (event) => {
       const query = event.target.value.trim().toLowerCase();
       let filtered = projects.filter(p =>
-        p.title.toLowerCase().includes(query)
+        p.title.toLowerCase().includes(query) ||
+        (p.description && p.description.toLowerCase().includes(query))
       );
 
       if (selectedIndex !== -1) {
