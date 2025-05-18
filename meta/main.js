@@ -1,5 +1,10 @@
 import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7.9.0/+esm';
 
+// Store scales globally to use in brushing
+let xScale, yScale;
+// Store commits globally for filtering
+let commits;
+
 /**
  * Loads CSV data and converts string values to appropriate types
  */
@@ -173,9 +178,111 @@ async function loadData() {
   }
   
   /**
+   * Check if a commit is within the brush selection
+   */
+  function isCommitSelected(selection, commit) {
+    if (!selection) {
+      return false;
+    }
+    
+    // Get pixel coordinates of this commit
+    const x = xScale(commit.datetime);
+    const y = yScale(commit.hourFrac);
+    
+    // Check if these coordinates are within the selection bounds
+    return (
+      selection[0][0] <= x && 
+      x <= selection[1][0] && 
+      selection[0][1] <= y && 
+      y <= selection[1][1]
+    );
+  }
+  
+  /**
+   * Handle brush events
+   */
+  function brushed(event) {
+    const selection = event.selection;
+    
+    // Update circle styling based on selection
+    d3.selectAll('circle').classed('selected', (d) => 
+      isCommitSelected(selection, d)
+    );
+    
+    // Update selection count
+    renderSelectionCount(selection);
+    
+    // Update language breakdown
+    renderLanguageBreakdown(selection);
+  }
+  
+  /**
+   * Create and configure the brush
+   */
+  function createBrushSelector(svg) {
+    // Create brush and attach event listener
+    svg.call(d3.brush().on('start brush end', brushed));
+    
+    // Raise dots and other elements above overlay
+    svg.selectAll('.dots, .overlay ~ *').raise();
+  }
+  
+  /**
+   * Update the count of selected commits
+   */
+  function renderSelectionCount(selection) {
+    const selectedCommits = selection
+      ? commits.filter((d) => isCommitSelected(selection, d))
+      : [];
+      
+    const countElement = document.querySelector('#selection-count');
+    countElement.textContent = `${selectedCommits.length || 'No'} commits selected`;
+    
+    return selectedCommits;
+  }
+  
+  /**
+   * Display language breakdown for selected commits
+   */
+  function renderLanguageBreakdown(selection) {
+    const selectedCommits = selection
+      ? commits.filter((d) => isCommitSelected(selection, d))
+      : [];
+    const container = document.getElementById('language-breakdown');
+    
+    if (selectedCommits.length === 0) {
+      container.innerHTML = '';
+      return;
+    }
+    
+    const requiredCommits = selectedCommits.length ? selectedCommits : commits;
+    const lines = requiredCommits.flatMap((d) => d.lines);
+    
+    // Use d3.rollup to count lines per language
+    const breakdown = d3.rollup(
+      lines,
+      (v) => v.length,
+      (d) => d.type,
+    );
+    
+    // Update DOM with breakdown
+    container.innerHTML = '';
+    
+    for (const [language, count] of breakdown) {
+      const proportion = count / lines.length;
+      const formatted = d3.format('.1~%')(proportion);
+      
+      container.innerHTML += `
+        <dt>${language}</dt>
+        <dd>${count} lines (${formatted})</dd>
+      `;
+    }
+  }
+  
+  /**
    * Render a scatterplot of commits by time of day
    */
-  function renderScatterPlot(data, commits) {
+  function renderScatterPlot(data, allCommits) {
     // Define dimensions
     const width = 1000;
     const height = 600;
@@ -200,14 +307,14 @@ async function loadData() {
       .attr('viewBox', `0 0 ${width} ${height}`)
       .style('overflow', 'visible');
     
-    // Create scales
-    const xScale = d3
+    // Create scales and store them globally
+    xScale = d3
       .scaleTime()
-      .domain(d3.extent(commits, d => d.datetime))
+      .domain(d3.extent(allCommits, d => d.datetime))
       .range([usableArea.left, usableArea.right])
       .nice();
     
-    const yScale = d3
+    yScale = d3
       .scaleLinear()
       .domain([0, 24])
       .range([usableArea.bottom, usableArea.top]);
@@ -220,7 +327,7 @@ async function loadData() {
       .interpolate(d3.interpolateRgb);
     
     // Calculate extent of edited lines
-    const [minLines, maxLines] = d3.extent(commits, (d) => d.totalLines);
+    const [minLines, maxLines] = d3.extent(allCommits, (d) => d.totalLines);
     
     // Create a square root scale for circle radius to ensure area is proportional to data
     const rScale = d3
@@ -260,7 +367,7 @@ async function loadData() {
       .call(yAxis);
     
     // Sort commits by total lines in descending order (larger dots are rendered first)
-    const sortedCommits = d3.sort(commits, (d) => -d.totalLines);
+    const sortedCommits = d3.sort(allCommits, (d) => -d.totalLines);
     
     // Add dots
     const dots = svg.append('g').attr('class', 'dots');
@@ -286,6 +393,9 @@ async function loadData() {
         d3.select(event.currentTarget).style('fill-opacity', 0.7);
         updateTooltipVisibility(false);
       });
+      
+    // Initialize the brush after creating the visualization
+    createBrushSelector(svg);
   }
   
   /**
@@ -310,27 +420,6 @@ async function loadData() {
     }
     
     return `${maxAuthor} (${maxCount} commits)`;
-  }
-  
-  // Main execution
-  async function main() {
-    // Load and process data
-    let data = await loadData();
-    let commits = processCommits(data);
-    
-    console.log(commits);
-    
-    // Clear the stats div first
-    d3.select('#stats').html('<h2>Repository Statistics</h2>');
-    
-    // Render commit info with detailed stats
-    renderCommitInfo(data, commits);
-    
-    // Render the scatterplot
-    renderScatterPlot(data, commits);
-    
-    // Add a legend for circle size
-    addSizeLegend(commits);
   }
   
   /**
@@ -361,6 +450,27 @@ async function loadData() {
       
     legendText.append('span')
       .text(`${maxLines} lines`);
+  }
+  
+  // Main execution
+  async function main() {
+    // Load and process data
+    let data = await loadData();
+    commits = processCommits(data);
+    
+    console.log(commits);
+    
+    // Clear the stats div first
+    d3.select('#stats').html('<h2>Repository Statistics</h2>');
+    
+    // Render commit info with detailed stats
+    renderCommitInfo(data, commits);
+    
+    // Render the scatterplot
+    renderScatterPlot(data, commits);
+    
+    // Add a legend for circle size
+    addSizeLegend(commits);
   }
 
   // Execute the main function
