@@ -132,6 +132,47 @@ async function loadData() {
   }
   
   /**
+   * Update tooltip content with commit information
+   */
+  function renderTooltipContent(commit) {
+    const link = document.getElementById('commit-link');
+    const date = document.getElementById('commit-date');
+    const time = document.getElementById('commit-time');
+    const author = document.getElementById('commit-author');
+    const lines = document.getElementById('commit-lines');
+
+    if (Object.keys(commit).length === 0) return;
+
+    link.href = commit.url;
+    link.textContent = commit.id;
+    date.textContent = commit.datetime?.toLocaleString('en', {
+      dateStyle: 'full',
+    });
+    time.textContent = commit.datetime?.toLocaleString('en', {
+      timeStyle: 'medium',
+    });
+    author.textContent = commit.author;
+    lines.textContent = `${commit.totalLines} lines`;
+  }
+  
+  /**
+   * Show or hide the tooltip
+   */
+  function updateTooltipVisibility(isVisible) {
+    const tooltip = document.getElementById('commit-tooltip');
+    tooltip.hidden = !isVisible;
+  }
+  
+  /**
+   * Update tooltip position based on mouse event
+   */
+  function updateTooltipPosition(event) {
+    const tooltip = document.getElementById('commit-tooltip');
+    tooltip.style.left = `${event.clientX + 15}px`;
+    tooltip.style.top = `${event.clientY + 15}px`;
+  }
+  
+  /**
    * Render a scatterplot of commits by time of day
    */
   function renderScatterPlot(data, commits) {
@@ -222,7 +263,15 @@ async function loadData() {
       .attr('fill', d => colorScale(d.hourFrac))
       .attr('stroke', '#fff')
       .attr('stroke-width', 1)
-      .attr('opacity', 0.8);
+      .attr('opacity', 0.8)
+      .on('mouseenter', (event, commit) => {
+        renderTooltipContent(commit);
+        updateTooltipVisibility(true);
+        updateTooltipPosition(event);
+      })
+      .on('mouseleave', () => {
+        updateTooltipVisibility(false);
+      });
   }
   
   /**
