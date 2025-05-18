@@ -354,3 +354,59 @@ abbr {
 .gridlines path {
   display: none;
 }
+
+.size-legend {
+  font-size: 0.9em;
+  color: #555;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+dl.info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  margin: 0;
+  padding: 12px;
+  transition-duration: 500ms;
+  transition-property: opacity, visibility;
+}
+
+dl.info dt {
+  color: #666;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+dl.info dd {
+  margin: 0;
+}
+
+dl.info[hidden]:not(:hover, :focus-within) {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.tooltip {
+  position: fixed;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-width: 300px;
+  backdrop-filter: blur(4px);
+}
+
+/* Circle hover effects */
+circle {
+  transition: 200ms;
+  transform-origin: center;
+  transform-box: fill-box;
+  cursor: pointer;
+}
+
+circle:hover {
+  transform: scale(1.2);
+  z-index: 10;
+}

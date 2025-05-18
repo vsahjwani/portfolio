@@ -219,6 +219,15 @@ async function loadData() {
       .range(['#2c3e50', '#3498db', '#f39c12', '#e74c3c', '#2c3e50'])
       .interpolate(d3.interpolateRgb);
     
+    // Calculate extent of edited lines
+    const [minLines, maxLines] = d3.extent(commits, (d) => d.totalLines);
+    
+    // Create a square root scale for circle radius to ensure area is proportional to data
+    const rScale = d3
+      .scaleSqrt()
+      .domain([minLines, maxLines])
+      .range([2, 30]);
+    
     // Add gridlines BEFORE the axes
     const gridlines = svg
       .append('g')
@@ -250,26 +259,31 @@ async function loadData() {
       .attr('transform', `translate(${usableArea.left}, 0)`)
       .call(yAxis);
     
+    // Sort commits by total lines in descending order (larger dots are rendered first)
+    const sortedCommits = d3.sort(commits, (d) => -d.totalLines);
+    
     // Add dots
     const dots = svg.append('g').attr('class', 'dots');
     
     dots
       .selectAll('circle')
-      .data(commits)
+      .data(sortedCommits)
       .join('circle')
       .attr('cx', d => xScale(d.datetime))
       .attr('cy', d => yScale(d.hourFrac))
-      .attr('r', 5)
+      .attr('r', d => rScale(d.totalLines))
       .attr('fill', d => colorScale(d.hourFrac))
       .attr('stroke', '#fff')
       .attr('stroke-width', 1)
-      .attr('opacity', 0.8)
+      .style('fill-opacity', 0.7)
       .on('mouseenter', (event, commit) => {
+        d3.select(event.currentTarget).style('fill-opacity', 1); // Full opacity on hover
         renderTooltipContent(commit);
         updateTooltipVisibility(true);
         updateTooltipPosition(event);
       })
-      .on('mouseleave', () => {
+      .on('mouseleave', (event) => {
+        d3.select(event.currentTarget).style('fill-opacity', 0.7);
         updateTooltipVisibility(false);
       });
   }
@@ -314,7 +328,40 @@ async function loadData() {
     
     // Render the scatterplot
     renderScatterPlot(data, commits);
+    
+    // Add a legend for circle size
+    addSizeLegend(commits);
   }
   
+  /**
+   * Add a legend explaining circle size
+   */
+  function addSizeLegend(commits) {
+    const legendContainer = d3.select('#chart-container')
+      .append('div')
+      .attr('class', 'size-legend')
+      .style('margin-top', '20px')
+      .style('text-align', 'center');
+      
+    legendContainer.append('p')
+      .text('Circle size represents number of lines edited in each commit')
+      .style('font-style', 'italic')
+      .style('margin-bottom', '5px');
+      
+    const [minLines, maxLines] = d3.extent(commits, d => d.totalLines);
+    
+    const legendText = legendContainer.append('div')
+      .style('display', 'flex')
+      .style('justify-content', 'space-between')
+      .style('max-width', '300px')
+      .style('margin', '0 auto');
+      
+    legendText.append('span')
+      .text(`${minLines} lines`);
+      
+    legendText.append('span')
+      .text(`${maxLines} lines`);
+  }
+
   // Execute the main function
   main();
