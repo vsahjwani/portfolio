@@ -253,8 +253,12 @@ svg path {
 }
 
 svg path.selected {
-  fill: oklch(60% 45% 0) !important;
+  --color: oklch(60% 45% 0) !important;
+
+  &:is(path) {
+    fill: var(--color);
   }
+}
 
 .legend {
   display: grid;
