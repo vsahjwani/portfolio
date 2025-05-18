@@ -22,7 +22,9 @@ function renderPieChart(data) {
   arcData.forEach((d, i) => {
     svg.append('path')
       .attr('d', arcGenerator(d))
-      .attr('fill', colors(i));
+      .attr('fill', colors(i))
+      .attr('class', i === selectedIndex ? 'selected' : null)
+      .attr('data-index', i);
   });
 
   const legend = d3.select('.legend');
@@ -31,6 +33,7 @@ function renderPieChart(data) {
   data.forEach((d, i) => {
     legend.append('li')
       .attr('style', `--color:${colors(i)}`)
+      .attr('class', i === selectedIndex ? 'selected' : null)
       .html(`<span class="swatch"></span> ${d.label} <em>(${d.value})</em>`);
   });
 }
@@ -53,6 +56,7 @@ function addPieInteractions(data, projects, container) {
 
     renderProjects(filtered, container, 'h2');
     renderPieChart(rollupProjects(filtered));
+    addPieInteractions(rollupProjects(filtered), projects, container);
   });
 }
 

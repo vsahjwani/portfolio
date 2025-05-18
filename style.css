@@ -247,6 +247,11 @@ svg:has(path:hover) {
   }
 }
 
+
+.selected {
+  --color: oklch(60% 45% 0) !important;
+}
+
 svg path {
   transition: 300ms;
   cursor: pointer;
@@ -259,6 +264,12 @@ svg path.selected {
     fill: var(--color);
   }
 }
+
+path {
+  cursor: pointer;
+}
+
+
 
 .legend {
   display: grid;
