@@ -340,9 +340,9 @@ async function loadData() {
    * Render a scatterplot of commits by time of day
    */
   function renderScatterPlot(data, allCommits) {
-    // Define dimensions
-    const width = 1000;
-    const height = 600;
+    // Define dimensions - adjusted for scrollytelling layout
+    const width = 600;
+    const height = 400;
     
     // Define margins
     const margin = { top: 10, right: 10, bottom: 30, left: 20 };
@@ -390,7 +390,7 @@ async function loadData() {
     const rScale = d3
       .scaleSqrt()
       .domain([minLines, maxLines])
-      .range([2, 30]);
+      .range([2, 20]); // Reduced max size for smaller chart
     
     // Add gridlines BEFORE the axes
     const gridlines = svg
@@ -462,8 +462,8 @@ async function loadData() {
    * Update scatter plot with filtered commits
    */
   function updateScatterPlot(data, commits) {
-    const width = 1000;
-    const height = 600;
+    const width = 600; // Adjusted for scrollytelling layout
+    const height = 400;
     const margin = { top: 10, right: 10, bottom: 30, left: 20 };
     const usableArea = {
       top: margin.top,
@@ -487,7 +487,7 @@ async function loadData() {
       .interpolate(d3.interpolateRgb);
 
     const [minLines, maxLines] = d3.extent(commits, (d) => d.totalLines);
-    const rScale = d3.scaleSqrt().domain([minLines, maxLines]).range([2, 30]);
+    const rScale = d3.scaleSqrt().domain([minLines, maxLines]).range([2, 20]); // Adjusted for smaller chart
 
     const xAxis = d3.axisBottom(xScale);
 
