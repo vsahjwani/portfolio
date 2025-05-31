@@ -387,11 +387,12 @@ async function loadData() {
     
     dots
       .selectAll('circle')
-      .data(sortedCommits)
+      .data(sortedCommits, (d) => d.id) // Add key function for stable transitions
       .join('circle')
       .attr('cx', d => xScale(d.datetime))
       .attr('cy', d => yScale(d.hourFrac))
       .attr('r', d => rScale(d.totalLines))
+      .style('--r', d => rScale(d.totalLines)) // Set CSS variable for radius-based transitions
       .attr('fill', d => colorScale(d.hourFrac))
       .attr('stroke', '#fff')
       .attr('stroke-width', 1)
@@ -454,11 +455,12 @@ async function loadData() {
     const sortedCommits = d3.sort(commits, (d) => -d.totalLines);
     dots
       .selectAll('circle')
-      .data(sortedCommits)
+      .data(sortedCommits, (d) => d.id) // Add key function for stable transitions
       .join('circle')
       .attr('cx', (d) => xScale(d.datetime))
       .attr('cy', (d) => yScale(d.hourFrac))
       .attr('r', (d) => rScale(d.totalLines))
+      .style('--r', d => rScale(d.totalLines)) // Set CSS variable for radius-based transitions
       .attr('fill', d => colorScale(d.hourFrac))
       .attr('stroke', '#fff')
       .attr('stroke-width', 1)

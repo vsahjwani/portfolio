@@ -445,3 +445,13 @@ circle.selected {
   color: #2c3e50;
   margin-bottom: 10px;
 }
+
+circle {
+  /* Smooth transitions for all properties, with radius using variable-based duration */
+  transition: all 200ms, r calc(var(--r) * 100ms);
+  
+  /* Starting style for new circles - they start with radius 0 */
+  @starting-style {
+    r: 0;
+  }
+}
