@@ -74,7 +74,11 @@ async function loadData() {
       .groups(lines, (d) => d.file)
       .map(([name, lines]) => {
         return { name, lines };
-      });
+      })
+      .sort((a, b) => b.lines.length - a.lines.length);
+
+    // Create color scale for different technologies
+    let colors = d3.scaleOrdinal(d3.schemeTableau10);
 
     let filesContainer = d3
       .select('#files')
@@ -102,7 +106,8 @@ async function loadData() {
       .selectAll('div')
       .data((d) => d.lines)
       .join('div')
-      .attr('class', 'loc');
+      .attr('class', 'loc')
+      .attr('style', (d) => `--color: ${colors(d.type)}`);
   }
   
   /**

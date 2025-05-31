@@ -463,6 +463,13 @@ circle {
   margin-bottom: 2rem;
 }
 
+/* Unit visualization styles */
+#files {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  margin-bottom: 2rem;
+}
+
 #files > div {
   grid-column: 1 / -1;
   display: grid;
@@ -490,6 +497,6 @@ circle {
   display: flex;
   width: 0.5em;
   aspect-ratio: 1;
-  background: steelblue;
+  background: var(--color, steelblue);
   border-radius: 50%;
 }
