@@ -1,4 +1,5 @@
 import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7.9.0/+esm';
+import scrollama from 'https://cdn.jsdelivr.net/npm/scrollama@3.2.0/+esm';
 
 // Store scales globally to use in brushing
 let xScale, yScale;
@@ -61,7 +62,8 @@ async function loadData() {
         });
   
         return ret;
-      });
+      })
+      .sort((a, b) => a.datetime - b.datetime); // Sort commits by datetime
   }
   
   /**
@@ -586,7 +588,78 @@ async function loadData() {
     });
     renderCommitInfo(filteredData, filteredCommits);
   }
-  
+
+  /**
+   * Generate commit text for scrollytelling
+   */
+  function generateCommitStory(commits) {
+    d3.select('#scatter-story')
+      .selectAll('.step')
+      .data(commits)
+      .join('div')
+      .attr('class', 'step')
+      .style('padding-bottom', '80vh') // Add spacing to make steps take up screen space
+      .html(
+        (d, i) => `
+          <div style="background: rgba(255,255,255,0.9); padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3>Commit ${i + 1}</h3>
+            <p>On ${d.datetime.toLocaleString('en', {
+              dateStyle: 'full',
+              timeStyle: 'short',
+            })}, 
+            I made ${
+              i > 0 ? 'another glorious commit' : 'my first commit, and it was glorious'
+            }.</p>
+            <p>I edited ${d.totalLines} lines across ${
+              d3.rollups(
+                d.lines,
+                (D) => D.length,
+                (d) => d.file,
+              ).length
+            } files.</p>
+            <p>Then I looked over all I had made, and I saw that it was very good.</p>
+          </div>
+        `,
+      );
+  }
+
+  /**
+   * Handle scroll step enter events
+   */
+  function onStepEnter(response) {
+    console.log(response.element.__data__.datetime);
+    
+    // Get the commit data from the current step
+    const currentCommit = response.element.__data__;
+    
+    // Filter commits up to the current one (showing progression)
+    filteredCommits = commits.filter((d) => d.datetime <= currentCommit.datetime);
+    
+    // Update the scatter plot
+    updateScatterPlot(data, filteredCommits);
+    
+    // Update file display
+    updateFileDisplay(filteredCommits);
+    
+    // Update stats with filtered data
+    const filteredData = data.filter(d => {
+      const commitForLine = commits.find(c => c.id === d.commit);
+      return commitForLine && commitForLine.datetime <= currentCommit.datetime;
+    });
+    renderCommitInfo(filteredData, filteredCommits);
+    
+    // Update the slider to match current progress
+    const progressPercent = timeScale(currentCommit.datetime);
+    const slider = document.getElementById('commit-progress');
+    const timeElement = document.getElementById('commit-time');
+    
+    slider.value = progressPercent;
+    timeElement.textContent = currentCommit.datetime.toLocaleString('en', {
+      dateStyle: 'long',
+      timeStyle: 'short'
+    });
+  }
+
   // Main execution
   async function main() {
     // Load and process data
@@ -624,12 +697,24 @@ async function loadData() {
     // Add a legend for circle size
     addSizeLegend(commits);
     
+    // Generate commit story steps
+    generateCommitStory(commits);
+    
     // Set up event listener for slider
     const slider = document.getElementById('commit-progress');
     slider.addEventListener('input', onTimeSliderChange);
     
     // Initialize time display
     onTimeSliderChange();
+    
+    // Set up Scrollama
+    const scroller = scrollama();
+    scroller
+      .setup({
+        container: '#scrolly-1',
+        step: '#scrolly-1 .step',
+      })
+      .onStepEnter(onStepEnter);
   }
 
   // Execute the main function
