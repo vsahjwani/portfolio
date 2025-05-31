@@ -65,6 +65,47 @@ async function loadData() {
   }
   
   /**
+   * Update the file display with unit visualization
+   */
+  function updateFileDisplay(filteredCommits) {
+    // Get lines and files from filtered commits
+    let lines = filteredCommits.flatMap((d) => d.lines);
+    let files = d3
+      .groups(lines, (d) => d.file)
+      .map(([name, lines]) => {
+        return { name, lines };
+      });
+
+    let filesContainer = d3
+      .select('#files')
+      .selectAll('div')
+      .data(files, (d) => d.name)
+      .join(
+        // This code only runs when the div is initially rendered
+        (enter) =>
+          enter.append('div').call((div) => {
+            div.append('dt').call(dt => {
+              dt.append('code');
+              dt.append('small').style('display', 'block').style('opacity', '0.7').style('font-size', '0.8em');
+            });
+            div.append('dd');
+          }),
+      );
+
+    // Update the file names and line counts
+    filesContainer.select('dt > code').text((d) => d.name);
+    filesContainer.select('dt > small').text((d) => `${d.lines.length} lines`);
+
+    // Create unit visualization - append one div for each line
+    filesContainer
+      .select('dd')
+      .selectAll('div')
+      .data((d) => d.lines)
+      .join('div')
+      .attr('class', 'loc');
+  }
+  
+  /**
    * Render commit information using D3 DOM manipulation
    */
   function renderCommitInfo(data, commits) {
@@ -530,6 +571,9 @@ async function loadData() {
     // Update visualizations
     updateScatterPlot(data, filteredCommits);
     
+    // Update file display
+    updateFileDisplay(filteredCommits);
+    
     // Update stats with filtered data
     const filteredData = data.filter(d => {
       const commitForLine = commits.find(c => c.id === d.commit);
@@ -565,6 +609,9 @@ async function loadData() {
     
     // Render commit info with detailed stats
     renderCommitInfo(data, commits);
+    
+    // Initialize file display with all commits
+    updateFileDisplay(filteredCommits);
     
     // Render the scatterplot
     renderScatterPlot(data, commits);
