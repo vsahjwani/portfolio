@@ -18,8 +18,16 @@
       <time id="commit-time" style="margin-left: auto;"></time>
   </label>
 </div>
-
-<div id="stats"></div>
+<dl id="files">
+  <!-- we want the following structure for each file:
+  <div>
+    <dt>
+      <code>{file.name}</code>
+    </dt>
+    <dd>{file.lines.length} lines</dd>
+  </div>
+  -->
+</dl>
 
 <div id="scrolly-1">
   <div id="scatter-story">
@@ -61,18 +69,7 @@
     <dd id="commit-lines"></dd>
   </dl>
   
-  <dl id="files">
-    <!-- we want the following structure for each file:
-    <div>
-      <dt>
-        <code>{file.name}</code>
-      </dt>
-      <dd>{file.lines.length} lines</dd>
-    </div>
-    -->
-  </dl>
-  
-  
+  <div id="stats"></div>
 
 </body>
 </html>
